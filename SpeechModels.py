@@ -65,7 +65,7 @@ def RNNSpeechModel(nCategories, samplingrate=16000, inputLength=16000):
     sr = samplingrate
     iLen = inputLength
 
-    inputs = L.L.Input((iLen,))
+    inputs = L.Input((inputLength,), name='input')
 
     x = L.Reshape((1, -1))(inputs)
 
