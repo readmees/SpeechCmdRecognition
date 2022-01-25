@@ -60,7 +60,7 @@ def ConvSpeechModel(nCategories, samplingrate=16000, inputLength=16000):
     return model
 
 
-def RNNSpeechModel(nCategories, samplingrate=16000, inputLength=16000):
+def RNNSpeechModel(nCategories, samplingrate=16000, inputLength=16000, rnn_func=L.LSTM):
     # simple LSTM
     sr = samplingrate
     iLen = inputLength
@@ -92,9 +92,9 @@ def RNNSpeechModel(nCategories, samplingrate=16000, inputLength=16000):
     # keras.backend.squeeze(x, axis)
     x = L.Lambda(lambda q: K.squeeze(q, -1), name='squeeze_last_dim')(x)
 
-    x = L.Bidirectional(L.CuDNNLSTM(64, return_sequences=True))(
+    x = L.Bidirectional(rnn_func(64, return_sequences=True))(
         x)  # [b_s, seq_len, vec_dim]
-    x = L.Bidirectional(L.CuDNNLSTM(64))(x)
+    x = L.Bidirectional(rnn_func(64))(x)
 
     x = L.Dense(64, activation='relu')(x)
     x = L.Dense(32, activation='relu')(x)
